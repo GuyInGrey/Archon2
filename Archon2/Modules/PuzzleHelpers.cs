@@ -7,13 +7,13 @@ namespace Archon2.Modules
 {
     public static class PuzzleHelpers
     {
-        public static (Image, int x, int y) Generate(Image input, int size)
+        public static (Image, int x, int y) Generate(Image input, int size, Color background)
         {
             var blank = new Image<Argb32>(input.Width, input.Height);
             blank.Mutate(b =>
             {
                 var pS = input.Width / size;
-                b.BackgroundColor(Color.White)
+                b.BackgroundColor(background)
                     .DrawImage(input, 1)
                     .Fill(Color.White, new Rectangle(pS * size, pS * size, input.Width/size, input.Height/size));
             });

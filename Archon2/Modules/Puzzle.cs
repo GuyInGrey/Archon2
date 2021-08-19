@@ -11,6 +11,7 @@ using DSharpPlus.SlashCommands;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Archon2.Modules
 {
@@ -21,7 +22,12 @@ namespace Archon2.Modules
 
         [SlashCommand("puzzle", "Starts a sliding puzzle")]
         public async Task PuzzleCmd(InteractionContext c, 
-            [Option("size", "The number of pieces on the x and y axis. An input of 4 will result in 15 pieces with one space.")]long size)
+            [Option("size", "The number of pieces on the x and y axis. An input of 4 will result in 15 pieces with one space.")]long size,
+            [Choice("Discord", "discord")]
+            [Choice("White", "white")]
+            [Choice("Black", "black")]
+            [Choice("Transparent", "transparent")]
+            [Option("color", "The background color for the image.")]string color = "discord")
         {
             var builder = new DiscordInteractionResponseBuilder().AddEmbed(Utils.Embed()
                 .WithTitle("Please upload an image.")
@@ -80,7 +86,12 @@ namespace Archon2.Modules
                 return;
             }
 
-            var parts = PuzzleHelpers.Generate(image, (int)size);
+            var parts = PuzzleHelpers.Generate(image, (int)size, 
+                color == "discord" ? new Color(new Argb32(54, 57, 63)) :
+                color == "black" ? new Color(new Argb32(0, 0, 0)) :
+                color == "white" ? new Color(new Argb32(255, 255, 255)) :
+                color == "transparent" ? new Color(new Argb32(0, 0, 0, 0)) :
+                Color.Magenta);
             image = parts.Item1;
             var u = await ImageToUrl(image);
             await Run(c, u, (int)size, parts.x, parts.y);
