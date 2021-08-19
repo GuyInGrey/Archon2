@@ -15,7 +15,7 @@ namespace Archon2.Modules
                 var pS = input.Width / size;
                 b.BackgroundColor(background)
                     .DrawImage(input, 1)
-                    .Fill(Color.White, new Rectangle(pS * size, pS * size, input.Width/size, input.Height/size));
+                    .Fill(Color.White, new Rectangle(pS * (size - 1), pS * (size - 1), pS, pS));
             });
 
             return (blank, size - 1, size - 1);

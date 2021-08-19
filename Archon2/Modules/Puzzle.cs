@@ -66,13 +66,13 @@ namespace Archon2.Modules
             ImageChannel = await c.Client.GetChannelAsync(854456461676642304);
 
             var url = r.Result.Attachments[0].Url;
+            await r.Result.DeleteAsync();
 
             await c.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(Utils.Embed()
                 .WithDescription("Loading...")
                 .WithAuthor(c.Member.DisplayName, iconUrl: c.Member.GetAvatarUrl(ImageFormat.Png, 256))));
 
             var image = await UrlToImage(url);
-            await r.Result.DeleteAsync();
 
             if (image.Width != image.Height || image.Width % size != 0 || image.Height % size != 0 || image.Width > 1024)
             {
@@ -124,7 +124,6 @@ namespace Archon2.Modules
                 .AddComponents(buttons));
 
             var r = await c.Client.GetInteractivity().WaitForButtonAsync(await c.GetOriginalResponseAsync(), new TimeSpan(0, 5, 0));
-            await r.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
 
             if (r.TimedOut || r.Result.Id == "end")
             {
@@ -135,6 +134,8 @@ namespace Archon2.Modules
                 return;
             }
 
+            await r.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+
             var image = await UrlToImage(url);
 
             switch (r.Result.Id)
@@ -143,7 +144,7 @@ namespace Archon2.Modules
                     await c.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(Utils.Embed()
                         .WithTitle("Shuffling, please wait...")
                         .WithAuthor(c.Member.DisplayName, iconUrl: c.Member.GetAvatarUrl(ImageFormat.Png, 256))));
-                    for (var i = 0; i < 100; i++)
+                    for (var i = 0; i < 1000; i++)
                     {
                         (image, x, y) = PuzzleHelpers.Swap(image, x, y, size, rand.Next(0, 4));
                     }
