@@ -16,7 +16,6 @@ namespace Archon2
 
         private readonly DiscordClient Client;
         private readonly SlashCommandsExtension Slash;
-        private readonly InteractivityExtension Interactivity;
 
         public BotManager()
         {
@@ -27,9 +26,12 @@ namespace Archon2
                 Intents = DiscordIntents.All,
             });
 
+            Client.UseInteractivity();
+
             Slash = Client.UseSlashCommands();
-            Interactivity = Client.UseInteractivity();
             Slash.RegisterCommands<TestSlash>(769057370646511628);
+            Slash.RegisterCommands<RandomMessage>(769057370646511628);
+            Slash.RegisterCommands<Puzzle>(769057370646511628);
         }
 
         public async Task Run()

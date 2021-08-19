@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using DSharpPlus;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity.Extensions;
 using DSharpPlus.SlashCommands;
 
 namespace Archon2.Modules
@@ -21,20 +22,32 @@ namespace Archon2.Modules
 
             var dropdown = new DiscordSelectComponent("dropdown", null, options);
 
-            //var intr = c.Client.GetInteractivity();
-            //var r = await intr.WaitForSelectAsync(null, "dropdown");
-
-            c.Client.ComponentInteractionCreated += async (s, e) =>
-            {
-                Console.WriteLine("A");
-            };
+            var embed = Utils.Embed().WithDescription("")
+                .WithTitle("Pong!")
+                .WithDescription("I have no clue how to get client latency yet.");
 
             await c.CreateResponseAsync(InteractionResponseType.ChannelMessageWithSource, new DiscordInteractionResponseBuilder()
-                .AddEmbed(new DiscordEmbedBuilder()
-                    .WithColor(DiscordColor.CornflowerBlue)
-                    .WithTitle("Pong!")
-                    .WithDescription("I have no clue how to get client latency yet.")
-                    .Build()).AddComponents(dropdown));
+                .AddEmbed(embed.Build()).AddComponents(dropdown));
+
+            var intr = c.Client.GetInteractivity();
+            var r = await intr.WaitForSelectAsync(await c.GetOriginalResponseAsync(), "dropdown");
+           
+            switch (r.Result.Values[0])
+            {
+                case "learn":
+                    var embed2 = Utils.Embed()
+                        .WithTitle("Learn?")
+                        .WithDescription("I'm lazy.");
+                    await c.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(embed.Build()).AddEmbed(embed2));
+                    break;
+                case "understand":
+                    embed2 = Utils.Embed()
+                        .WithTitle("Thank you!")
+                        .WithDescription(":D");
+                    await c.EditResponseAsync(new DiscordWebhookBuilder().AddEmbed(embed.Build()).AddEmbed(embed2));
+                    break;
+            }
+
         }
     }
 }
