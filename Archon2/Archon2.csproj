@@ -5,4 +5,11 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-00967" />
+    <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-00967" />
+    <PackageReference Include="IDoEverything.DSharpPlus.SlashCommands" Version="2.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
 </Project>

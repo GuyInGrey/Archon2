@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Archon2": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Runtimes\\Archon2\""
+    }
+  }
+}
